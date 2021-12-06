@@ -78,7 +78,7 @@ export const create = async (req, res) => {
     const alreadyExist = await Course.findOne({
       slug: slugify(req.body.name.toLowerCase()),
     });
-    if (!alreadyExist) return res.status(400).send("Title is taken");
+    if (alreadyExist) return res.status(400).send("Title is taken");
 
     const course = await new Course({
       slug: slugify(req.body.name),
