@@ -11,16 +11,19 @@ const csrfProtection = csrf({ cookie: true });
 // create express server
 const app = express();
 
-// db connection using native Node MongoDB connection
-// const { MongoClient } = require('mongodb');
+//db connection using native Node MongoDB connection
+// const { MongoClient } = require("mongodb");
 // const uri = process.env.DATABASE;
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   console.log('DB SUCCESS!')
+// const client = new MongoClient(uri, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+// client.connect((err) => {
+//   const collection = client.db("elearn").collection("devices");
+//   console.log("DB SUCCESS!");
 //   // perform actions on the collection object
 //   client.close();
-//   console.log('DB Connection Terminated');
+//   console.log("DB Connection Terminated");
 // });
 //       *Alternate using mongoose*
 import mongoose from "mongoose";

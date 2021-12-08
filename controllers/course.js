@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 import { nanoid } from "nanoid";
 import Course from "../models/course";
-import CompletedCourse from "../models/completed";
+import Completed from "../models/completed";
 import slugify from "slugify";
 import { readFileSync } from "fs";
 import User from "../models/user";
@@ -78,7 +78,7 @@ export const create = async (req, res) => {
     const alreadyExist = await Course.findOne({
       slug: slugify(req.body.name.toLowerCase()),
     });
-    if (alreadyExist) return res.status(400).send("Title is taken");
+    //if (alreadyExist) return res.status(400).send("Title is taken");
 
     const course = await new Course({
       slug: slugify(req.body.name),
@@ -97,7 +97,7 @@ export const read = async (req, res) => {
   try {
     const course = await Course.find({ slug: req.params.slug })
       .populate("instructor", "_id name")
-      .exec(req.body);
+      .exec();
     res.json(course);
   } catch (err) {
     console.log(err);
@@ -152,7 +152,7 @@ export const removeVideo = async (req, res) => {
     // upload to S3
     S3.deleteObject(params, (err, data) => {
       if (err) {
-        console.error(err);
+        console.log(err);
         res.sendStatus(400);
       }
       console.log(data);
@@ -168,7 +168,7 @@ export const addLesson = async (req, res) => {
     const { slug, instructorId } = req.params;
     const { title, content, video } = req.body;
 
-    if (req.user._id != req.params.instructorId) {
+    if (req.user._id != instructorId) {
       return res.status(400).send("Unauthorized");
     }
 
@@ -209,7 +209,7 @@ export const update = async (req, res) => {
 };
 
 export const removeLesson = async (req, res) => {
-  const { slug } = req.params;
+  const { slug, lessonId } = req.params;
   const course = await Course.findOne({ slug }).exec();
   if (req.user._id != course.instructor) {
     return res.status(400).send("Unauthorized");
@@ -331,6 +331,7 @@ export const freeEnrollment = async (req, res) => {
       },
       { new: true }
     ).exec();
+    console.log(result);
     res.json({
       message: "Congratulations! You have successfully enrolled",
       course,
@@ -458,7 +459,7 @@ export const listCompleted = async (req, res) => {
       course: req.body.courseId,
     }).exec();
     list && res.json(list.lessons);
-  } catch {
+  } catch (err) {
     console.log(err);
   }
 };
@@ -477,7 +478,7 @@ export const markIncomplete = async (req, res) => {
       }
     ).exec();
     res.json({ ok: true });
-  } catch {
+  } catch (err) {
     console.log(err);
   }
 };
