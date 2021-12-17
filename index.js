@@ -33,7 +33,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log("DB connection established"))
-  .catch((err) => console.error("DB CONNECTION ERR => ", err));
+  .catch((err) => console.log("DB CONNECTION ERR => ", err));
 
 // apply middleware
 app.use(cors());
@@ -48,6 +48,9 @@ app.use(csrfProtection);
 
 app.get("/api/csrf-token", (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
+});
+app.post("/process", (req, res) => {
+  res.send("data is being processed");
 });
 
 // port

@@ -75,6 +75,7 @@ export const instructorCourses = async (req, res) => {
       .sort({ createdAt: -1 })
       .exec();
     res.json(courses);
+    //console.log("instructorCourses");
   } catch (err) {
     console.log(err);
   }

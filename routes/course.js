@@ -40,12 +40,12 @@ router.post("/course", requireSignin, isInstructor, create);
 router.put("/course/:slug", requireSignin, update);
 router.get("/course/:slug", read);
 router.post(
-  "/course/video-upload:instructorId",
+  "/course/upload-video/:instructorId",
   requireSignin,
   formidable({ maxFileSize: 500 * 1024 * 1024 }),
   uploadVideo
 );
-router.post("/course/video-remove:instructorId", requireSignin, removeVideo);
+router.post("/course/remove-video/:instructorId", requireSignin, removeVideo);
 
 // publish unpublish courses
 router.put("/course/publish/:courseId", requireSignin, publishCourse);

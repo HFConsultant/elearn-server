@@ -78,6 +78,7 @@ export const create = async (req, res) => {
     const alreadyExist = await Course.findOne({
       slug: slugify(req.body.name.toLowerCase()),
     });
+    console.log("Does this already exist? =>", alreadyExist);
     //if (alreadyExist) return res.status(400).send("Title is taken");
 
     const course = await new Course({
@@ -106,11 +107,13 @@ export const read = async (req, res) => {
 
 export const uploadVideo = async (req, res) => {
   try {
-    // if (req.user._id != req.params.instructorId) {
-    //   return res.status(400).send("Unauthorized");
-    // }
-    const { video } = req.files;
-    console.log(video);
+    console.log("req.user._id", req.user._id);
+    console.log("req.params.instructorId", req.params.instructorId);
+    if (req.user._id != req.params.instructorId) {
+      return res.status(400).send("Unauthorized");
+    }
+    const { video } = req.files; //req.files instead of req.body due to formidable being used as middleware
+    console.log("video from req.files =>", video);
     if (!video) return res.status(400).send("No video");
 
     const params = {
@@ -120,11 +123,11 @@ export const uploadVideo = async (req, res) => {
       ACL: "public-read",
       ContentType: video.type,
     };
-
+    console.log("AWS params:", params);
     // upload to S3
     S3.upload(params, (err, data) => {
       if (err) {
-        console.error(err);
+        console.log(err);
         res.sendStatus(400);
       }
       console.log(data);
@@ -183,7 +186,7 @@ export const addLesson = async (req, res) => {
       .exec();
     res.json(updated);
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return res.status(400).send("Add lesson failed");
   }
 };
@@ -337,7 +340,7 @@ export const freeEnrollment = async (req, res) => {
       course,
     });
   } catch (err) {
-    console.error("free enrollment error", err);
+    console.log("free enrollment error", err);
     return res.status(400).send("Enrollment failed");
   }
 };

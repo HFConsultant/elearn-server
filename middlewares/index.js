@@ -18,7 +18,7 @@ export const isInstructor = async (req, res, next) => {
       next();
     }
   } catch (err) {
-    console.error(err);
+    console.log(err);
   }
 };
 
