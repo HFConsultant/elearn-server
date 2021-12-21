@@ -323,6 +323,7 @@ export const checkEnrollment = async (req, res) => {
 
 export const freeEnrollment = async (req, res) => {
   try {
+    console.log("freeEnrollment invoked");
     // check if course is free or paid
     const course = await Course.findById(req.params.courseId).exec();
     if (course.paid) return;
@@ -347,10 +348,12 @@ export const freeEnrollment = async (req, res) => {
 
 export const paidEnrollment = async (req, res) => {
   try {
+    console.log("paidEnrollment invoked");
     // check if course is paid
     const course = await Course.findById(req.params.courseId)
       .populate("instructor")
       .exec();
+    console.log("paidEnrollment 'course' => ", course);
     if (!course.paid) return;
     // application fee 30%
     const fee = (course.price * 30) / 100;
